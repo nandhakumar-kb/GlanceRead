@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Kaushan+Script&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        /* 
+      LIGHT THEME 
+      Electric Blue: #007BFF (0 123 255)
+      Lightning Yellow: #FFC107 (255 193 7)
+    */
+        --color-primary-50: 235 245 255;
+        --color-primary-500: 0 123 255;
+        /* #007BFF */
+        --color-primary-600: 0 100 210;
+        /* Darker for hover */
+
+        --color-accent-400: 255 210 60;
+        --color-accent-500: 255 193 7;
+        /* #FFC107 */
+
+        --color-background: 255 255 255;
+        /* Pure White */
+        --color-surface: 248 250 252;
+        /* Slate 50 */
+
+        --color-text-main: 15 23 42;
+        /* Slate 900 */
+        --color-text-muted: 100 116 139;
+        /* Slate 500 */
+
+        /* Slate Palette (Light Mode defaults) */
+        --color-slate-50: 248 250 252;
+        --color-slate-100: 241 245 249;
+        --color-slate-200: 226 232 240;
+        --color-slate-300: 203 213 225;
+        --color-slate-400: 148 163 184;
+        --color-slate-500: 100 116 139;
+        --color-slate-600: 71 85 105;
+        --color-slate-700: 51 65 85;
+        --color-slate-800: 30 41 59;
+        --color-slate-900: 15 23 42;
+    }
+
+    .dark {
+        /* 
+      DARK THEME 
+      Background: Pure Black #000000
+    */
+        --color-primary-50: 10 25 45;
+        --color-primary-500: 51 149 255;
+        /* Lighter Blue for contrast on black */
+        --color-primary-600: 0 123 255;
+        /* Original Brand Blue */
+
+        --color-accent-400: 255 210 64;
+        --color-accent-500: 255 193 7;
+
+        --color-background: 0 0 0;
+        /* Pure Black */
+        --color-surface: 20 20 20;
+        /* Dark Grey for cards */
+
+        --color-text-main: 255 255 255;
+        /* Pure White */
+        --color-text-muted: 156 163 175;
+        /* Gray 400 */
+
+        /* Slate Maps to Dark Shades */
+        --color-slate-50: 20 20 20;
+        --color-slate-100: 30 30 30;
+        --color-slate-200: 45 45 45;
+        --color-slate-800: 240 240 240;
+        /* Invert heavy uses? No, kept strict for borders */
+        --color-slate-900: 255 255 255;
+        /* Headings become white */
+    }
+
+    body {
+        @apply font-sans text-text-main bg-background transition-colors duration-300;
+    }
+}
