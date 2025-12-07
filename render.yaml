@@ -1,0 +1,13 @@
+# Render deployment configuration
+# Create a new Web Service on Render and use these settings:
+# 
+# Build Command: cd server && npm install
+# Start Command: cd server && npm start
+# 
+# Environment Variables to set in Render dashboard:
+# - MONGO_URI
+# - JWT_SECRET
+# - IMAGEKIT_PUBLIC_KEY
+# - IMAGEKIT_PRIVATE_KEY
+# - IMAGEKIT_URL_ENDPOINT
+# - PORT (automatically set by Render, but defaults to 5000)
