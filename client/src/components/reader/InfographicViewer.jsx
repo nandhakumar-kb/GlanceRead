@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const InfographicViewer = ({ imageSrc, images = [], title }) => {
+const InfographicViewer = ({ imageSrc, images = [], title, isLocked }) => {
     // Combine to ensure we have an array to loop over. Priority: images array > single imageSrc > empty
     const allImages = (images && images.length > 0) ? images : (imageSrc ? [imageSrc] : []);
 
@@ -65,6 +66,46 @@ const InfographicViewer = ({ imageSrc, images = [], title }) => {
                             draggable={false}
                         />
                     ))}
+
+                    {isLocked && (
+                        <div className="w-full bg-slate-800 p-8 flex flex-col items-center justify-center text-center border-t border-slate-700">
+                            <div className="bg-slate-700 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                                <Lock size={32} className="text-slate-400" />
+                            </div>
+                            <h2 className="text-2xl font-bold text-white mb-2">Continue Reading</h2>
+                            <p className="text-slate-400 mb-8 max-w-md">
+                                You've reached the end of the preview. Sign up for a free account to unlock the full potential of GlanceRead.
+                            </p>
+                            <Link to="/register" className="inline-block">
+                                <button className="px-8 py-3 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-xl transition-colors">
+                                    Create Free Account
+                                </button>
+                            </Link>
+                            <p className="mt-4 text-sm text-slate-500">
+                                Already have an account? <Link to="/login" className="text-primary-400 hover:text-primary-300">Sign in</Link>
+                            </p>
+                        </div>
+                    )}
+
+                    {isLocked && (
+                        <div className="w-full bg-slate-800 p-8 flex flex-col items-center justify-center text-center border-t border-slate-700">
+                            <div className="bg-slate-700 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                                <Lock size={32} className="text-slate-400" />
+                            </div>
+                            <h2 className="text-2xl font-bold text-white mb-2">Continue Reading</h2>
+                            <p className="text-slate-400 mb-8 max-w-md">
+                                You've reached the end of the preview. Sign up for a free account to unlock the full potential of GlanceRead.
+                            </p>
+                            <Link to="/register" className="inline-block">
+                                <button className="px-8 py-3 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-xl transition-colors">
+                                    Create Free Account
+                                </button>
+                            </Link>
+                            <p className="mt-4 text-sm text-slate-500">
+                                Already have an account? <Link to="/login" className="text-primary-400 hover:text-primary-300">Sign in</Link>
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

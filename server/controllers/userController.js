@@ -117,3 +117,34 @@ exports.updateUser = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Admin
+exports.deleteUser = async (req, res) => {
+    try {
+        console.log(`[DELETE] Attempting to delete user ${req.params.id} by admin ${req.user.id}`);
+
+        // Prevent deleting yourself
+        if (req.params.id === req.user.id) {
+            console.warn('[DELETE] User tried to delete themselves');
+            return res.status(400).json({ msg: 'Cannot delete yourself' });
+        }
+
+        const user = await User.findByIdAndDelete(req.params.id);
+
+        if (!user) {
+            console.warn(`[DELETE] User ${req.params.id} not found`);
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        console.log(`[DELETE] User ${req.params.id} deleted successfully`);
+        res.json({ msg: 'User removed' });
+    } catch (err) {
+        console.error('[DELETE] Server Error:', err.message);
+        if (err.kind === 'ObjectId') {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        res.status(500).send('Server Error');
+    }
+};

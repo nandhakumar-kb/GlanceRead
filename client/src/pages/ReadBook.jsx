@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Lock, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { Lock, ArrowLeft, ShoppingBag, Download } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 import InfographicViewer from '../components/reader/InfographicViewer';
@@ -65,34 +65,10 @@ const ReadBook = () => {
 
     const isLocked = book.isPremium && (!isAuthenticated || user?.subscriptionStatus !== 'active');
 
-    if (isLocked) {
-        return (
-            <div className="min-h-screen pt-20 pb-12 px-4 bg-slate-50 flex flex-col items-center justify-center text-center">
-                <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg border border-slate-100 relative overflow-hidden">
-                    {/* Blurry Background Preview (Simulated) */}
-                    <div className="absolute inset-0 bg-cover bg-center opacity-10 blur-sm" style={{ backgroundImage: `url(${book.coverImage})` }}></div>
-
-                    <div className="relative z-10">
-                        <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Lock size={32} className="text-slate-400" />
-                        </div>
-                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Premium Content</h2>
-                        <p className="text-slate-600 mb-8">
-                            Subscribe to GlanceRead Premium to unlock this infographic and hundreds more.
-                        </p>
-                        <Link to="/pricing" className="block w-full mb-4">
-                            <Button variant="accent" className="w-full">
-                                Subscribe to Unlock
-                            </Button>
-                        </Link>
-                        <Link to="/" className="text-sm text-slate-500 hover:text-slate-900">
-                            Back to Library
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    // If locked, we allow one page as a teaser
+    const viewableImages = isLocked
+        ? (book.infographicImages?.length ? [book.infographicImages[0]] : [book.infographicImage])
+        : (book.infographicImages?.length ? book.infographicImages : [book.infographicImage]);
 
     return (
         <div className="h-screen flex flex-col bg-slate-900">
@@ -102,26 +78,62 @@ const ReadBook = () => {
                     <span>Back</span>
                 </Link>
                 <h1 className="text-white font-medium truncate max-w-md">{book.title}</h1>
-                {book.affiliateLink ? (
-                    <a
-                        href={book.affiliateLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-2 text-primary-400 hover:text-primary-300 transition-colors"
-                        title="Buy original book"
-                    >
-                        <span className="hidden sm:inline text-sm font-medium">Get Book</span>
-                        <ShoppingBag size={20} />
-                    </a>
-                ) : (
-                    <div className="w-16"></div>
-                )}
+                <div className="flex items-center space-x-4">
+                    {user?.subscriptionStatus === 'active' && (
+                        <button
+                            onClick={async () => {
+                                try {
+                                    const images = book.infographicImages?.length > 0
+                                        ? book.infographicImages
+                                        : [book.infographicImage];
+
+                                    // Identify current image index or download all?
+                                    // For now, download all matches user intent of "high res download"
+                                    for (let i = 0; i < images.length; i++) {
+                                        const imgUrl = images[i];
+                                        const response = await fetch(imgUrl);
+                                        const blob = await response.blob();
+                                        const url = window.URL.createObjectURL(blob);
+                                        const link = document.createElement('a');
+                                        link.href = url;
+                                        link.download = `${book.title}_page_${i + 1}.jpg`;
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                        window.URL.revokeObjectURL(url);
+                                    }
+                                } catch (e) {
+                                    console.error("Download failed", e);
+                                    alert("Download failed. Please try again.");
+                                }
+                            }}
+                            className="flex items-center space-x-2 text-slate-400 hover:text-white transition-colors"
+                            title="Download High-Res"
+                        >
+                            <span className="hidden sm:inline text-sm font-medium">Download</span>
+                            <Download size={20} />
+                        </button>
+                    )}
+
+                    {book.affiliateLink && (
+                        <a
+                            href={book.affiliateLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-2 text-primary-400 hover:text-primary-300 transition-colors"
+                            title="Buy original book"
+                        >
+                            <span className="hidden sm:inline text-sm font-medium">Get Book</span>
+                            <ShoppingBag size={20} />
+                        </a>
+                    )}
+                </div>
             </div>
             <div className="flex-1 relative">
                 <InfographicViewer
-                    imageSrc={book.infographicImage}
-                    images={book.infographicImages}
+                    images={viewableImages}
                     title={book.title}
+                    isLocked={isLocked}
                 />
             </div>
         </div>

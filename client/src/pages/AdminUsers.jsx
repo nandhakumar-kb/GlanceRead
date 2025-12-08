@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Check, X, Shield, Star } from 'lucide-react';
+import { Check, X, Shield, Star, Trash2 } from 'lucide-react';
 import { API_URL } from '../config';
 
 const AdminUsers = () => {
@@ -23,6 +23,18 @@ const AdminUsers = () => {
         } catch (err) {
             showToast('Failed to fetch users', 'error');
             setLoading(false);
+        }
+    };
+
+    const deleteUser = async (userId) => {
+        if (!window.confirm("Are you sure you want to delete this user? This cannot be undone.")) return;
+
+        try {
+            await axios.delete(`${API_URL}/api/users/${userId}`);
+            setUsers(users.filter(u => u._id !== userId));
+            showToast('User deleted successfully', 'success');
+        } catch (err) {
+            showToast(err.response?.data?.msg || 'Failed to delete user', 'error');
         }
     };
 
@@ -75,7 +87,7 @@ const AdminUsers = () => {
                                             <div className="font-medium text-slate-900 dark:text-white">{u.username}</div>
                                             <div className="text-xs text-slate-400">ID: {u._id.slice(-6)}</div>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{u.email}</td>
+                                        <td className="px-6 py-4 text-slate-600 dark:text-slate-300">{u.email}</td>
                                         <td className="px-6 py-4">
                                             {u.role === 'admin' ? (
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
@@ -101,16 +113,26 @@ const AdminUsers = () => {
                                         </td>
                                         <td className="px-6 py-4">
                                             {u.role !== 'admin' && (
-                                                <button
-                                                    onClick={() => toggleSubscription(u._id, u.subscriptionStatus)}
-                                                    className={`p-2 rounded-lg transition-colors ${u.subscriptionStatus === 'active'
-                                                        ? 'text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
-                                                        : 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
-                                                        }`}
-                                                    title={u.subscriptionStatus === 'active' ? "Revoke Premium" : "Grant Premium"}
-                                                >
-                                                    {u.subscriptionStatus === 'active' ? <X size={20} /> : <Check size={20} />}
-                                                </button>
+                                                <div className="flex items-center space-x-2">
+                                                    <button
+                                                        onClick={() => toggleSubscription(u._id, u.subscriptionStatus)}
+                                                        className={`p-2 rounded-lg transition-colors ${u.subscriptionStatus === 'active'
+                                                            ? 'text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
+                                                            : 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                                                            }`}
+                                                        title={u.subscriptionStatus === 'active' ? "Revoke Premium" : "Grant Premium"}
+                                                    >
+                                                        {u.subscriptionStatus === 'active' ? <X size={20} /> : <Check size={20} />}
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => deleteUser(u._id)}
+                                                        className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                                        title="Delete User"
+                                                    >
+                                                        <Trash2 size={20} />
+                                                    </button>
+                                                </div>
                                             )}
                                         </td>
                                     </tr>

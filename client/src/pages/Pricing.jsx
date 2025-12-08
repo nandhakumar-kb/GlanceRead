@@ -11,24 +11,31 @@ const Pricing = () => {
         <div className="min-h-screen pt-24 px-4 bg-background text-text-main text-center transition-colors duration-300">
             <div className="max-w-3xl mx-auto">
                 <h1 className="text-4xl font-bold text-text-main mb-6">
-                    Unlock Unlimited Knowledge
+                    Invest in Your Brain
                 </h1>
                 <p className="text-xl text-text-muted mb-12">
-                    Get access to thousands of visual book summaries.
+                    Join smart readers saving <strong>300+ hours</strong> a year.
                 </p>
 
                 <div className="bg-surface p-8 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800">
-                    <h2 className="text-2xl font-bold mb-4 text-primary-500">Premium</h2>
+                    <h2 className="text-2xl font-bold mb-4 text-primary-500">Premium Access</h2>
                     <p className="text-4xl font-bold mb-6 text-text-main">₹49<span className="text-sm font-normal text-text-muted">/mo</span></p>
-                    <ul className="text-left space-y-3 mb-8 text-text-muted">
-                        <li className="flex items-center gap-2">
-                            <Check className="w-5 h-5 text-green-500" /> Unlimited Access
+                    <ul className="text-left space-y-4 mb-8 text-text-muted">
+                        <li className="flex items-center gap-3">
+                            <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                            <span><strong>Unlimited Access</strong> to 1,000+ Summaries</span>
                         </li>
-                        <li className="flex items-center gap-2">
-                            <Check className="w-5 h-5 text-green-500" /> New books added weekly
+                        <li className="flex items-center gap-3">
+                            <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                            <span><strong>High-Res Downloads</strong> for Offline Reading</span>
                         </li>
-                        <li className="flex items-center gap-2">
-                            <Check className="w-5 h-5 text-green-500" /> High-res downloads
+                        <li className="flex items-center gap-3">
+                            <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                            <span><strong>New Books</strong> Added Every Week</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                            <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                            <span>Support Independent Creators</span>
                         </li>
                     </ul>
                     <button

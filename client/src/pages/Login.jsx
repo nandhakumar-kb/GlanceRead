@@ -45,8 +45,8 @@ const Login = () => {
                             <span className="text-primary-500">Read</span>
                         </span>
                     </Link>
-                    <h2 className="text-3xl font-bold text-slate-900">Welcome back</h2>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                         Sign in to access your library
                     </p>
                 </div>
@@ -61,7 +61,7 @@ const Login = () => {
                                 name="email"
                                 type="email"
                                 required
-                                className="appearance-none relative block w-full px-3 py-3 border border-slate-300 placeholder-slate-500 text-slate-900 rounded-xl focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                                className="appearance-none relative block w-full px-3 py-3 border border-slate-300 dark:border-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-[#1e293b] rounded-xl focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm transition-colors"
                                 placeholder="Email address"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -74,7 +74,7 @@ const Login = () => {
                                 name="password"
                                 type="password"
                                 required
-                                className="appearance-none relative block w-full px-3 py-3 border border-slate-300 placeholder-slate-500 text-slate-900 rounded-xl focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                                className="appearance-none relative block w-full px-3 py-3 border border-slate-300 dark:border-slate-700 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white bg-white dark:bg-[#1e293b] rounded-xl focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm transition-colors"
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}

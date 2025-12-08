@@ -17,5 +17,6 @@ router.put('/:id/subscription', auth, adminCheck, userController.updateSubscript
 router.put('/progress', auth, userController.updateProgress);
 router.put('/transaction', auth, userController.submitTransaction);
 router.put('/profile', auth, userController.updateUser);
+router.delete('/:id', auth, adminCheck, userController.deleteUser);
 
 module.exports = router;

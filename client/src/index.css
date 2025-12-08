@@ -82,3 +82,17 @@
         @apply font-sans text-text-main bg-background transition-colors duration-300;
     }
 }
+
+@layer utilities {
+
+    /* Autofill Dark Mode Hack */
+    .dark input:-webkit-autofill,
+    .dark input:-webkit-autofill:hover,
+    .dark input:-webkit-autofill:focus,
+    .dark input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+        /* Matches slate-800 */
+        -webkit-text-fill-color: white !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+}
