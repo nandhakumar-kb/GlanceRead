@@ -166,6 +166,9 @@ const Navbar = () => {
                                         <Link to="/admin/analytics">
                                             <Button variant="ghost" size="sm">Analytics</Button>
                                         </Link>
+                                        <Link to="/admin/affiliate">
+                                            <Button variant="ghost" size="sm">Affiliate</Button>
+                                        </Link>
                                     </>
                                 )}
                                 <Button variant="outline" size="sm" onClick={logout}>
@@ -246,6 +249,9 @@ const Navbar = () => {
                                                     <Button variant="ghost" className="w-full justify-start">Manage Users</Button>
                                                 </Link>
                                                 <Link to="/admin/analytics" onClick={() => setIsMobileMenuOpen(false)}>
+                                                    <Button variant="ghost" className="w-full justify-start">User Analytics</Button>
+                                                </Link>
+                                                <Link to="/admin/affiliate" onClick={() => setIsMobileMenuOpen(false)}>
                                                     <Button variant="ghost" className="w-full justify-start">Affiliate Analytics</Button>
                                                 </Link>
                                             </>
