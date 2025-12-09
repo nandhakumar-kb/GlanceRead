@@ -91,7 +91,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'verified', 'rejected', 'none'],
         default: 'none'
-    }
+    },
+    // Gamification
+    badges: [{
+        id: String,
+        name: String,
+        icon: String, // Emoji or Icon Name
+        date: { type: Date, default: Date.now }
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

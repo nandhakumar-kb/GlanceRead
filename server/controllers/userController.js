@@ -64,7 +64,34 @@ exports.updateProgress = async (req, res) => {
         }
 
         await user.save();
-        res.json(user);
+
+        // --- Gamification Logic ---
+        let newBadge = null;
+        const booksRead = user.readingProgress.filter(p => p.progress >= 90).length;
+
+        // Badge: First Book
+        if (booksRead === 1 && !user.badges.some(b => b.id === 'first_read')) {
+            newBadge = { id: 'first_read', name: 'First Step', icon: '🌱' };
+            user.badges.push(newBadge);
+        }
+        // Badge: Bookworm (5 books)
+        if (booksRead >= 5 && !user.badges.some(b => b.id === 'bookworm')) {
+            newBadge = { id: 'bookworm', name: 'Bookworm', icon: '🐛' };
+            user.badges.push(newBadge);
+        }
+        // Badge: Scholar (10 books)
+        if (booksRead >= 10 && !user.badges.some(b => b.id === 'scholar')) {
+            newBadge = { id: 'scholar', name: 'Scholar', icon: '🎓' };
+            user.badges.push(newBadge);
+        }
+
+        if (newBadge) await user.save();
+
+        // Return badge info so frontend can show notification
+        const userObj = user.toObject();
+        userObj.newBadge = newBadge;
+
+        res.json(userObj);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
