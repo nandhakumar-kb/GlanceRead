@@ -167,56 +167,55 @@ const Pricing = () => {
                             <div className="text-left bg-primary-50 dark:bg-primary-900/20 p-4 rounded-lg border border-primary-100 dark:border-primary-800 mb-6">
                                 <p className="text-sm font-medium text-primary-800 dark:text-primary-200 mb-2">Instructions:</p>
                                 <ol className="list-decimal list-inside text-sm text-primary-700 dark:text-primary-300 space-y-1">
-                                    <li>Scan QR with GPay / Paytm</li>
+                                    <li>Scan QR with GPay / Paytm / PhonePe</li>
                                     <li>Pay <strong>₹{selectedPlan.amount}.00</strong></li>
-                                    <li>Take a screenshot of the payment</li>
+                                    <li>Enter your Transaction ID below</li>
                                 </ol>
                             </div>
 
                             {/* Transaction Input */}
                             <div className="space-y-4">
-                                <input
-                                    type="text"
-                                    placeholder="Enter Transaction ID (Optional)"
-                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                    id="txnId"
-                                />
-                                <div className="space-y-2">
-                                    <label className="text-sm text-text-muted">Upload Payment Screenshot *</label>
+                                <div>
+                                    <label className="text-sm text-text-muted block mb-2">Transaction ID / Reference Number *</label>
                                     <input
-                                        type="file"
-                                        accept="image/*"
-                                        id="screenshot"
-                                        className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                                        type="text"
+                                        placeholder="Enter Transaction ID or UPI Ref No"
+                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                        id="txnId"
                                     />
                                 </div>
 
                                 <button
                                     onClick={async () => {
                                         const txnId = document.getElementById('txnId').value;
-                                        const screenshot = document.getElementById('screenshot').files[0];
 
-                                        if (!screenshot) return alert("Please upload a screenshot");
+                                        if (!txnId || txnId.trim() === '') {
+                                            addToast('Please enter Transaction ID', 'error');
+                                            return;
+                                        }
 
                                         setLoading(true);
                                         try {
                                             const token = localStorage.getItem('token');
-                                            if (!token) return alert("Please login first");
+                                            if (!token) {
+                                                addToast('Please login first', 'error');
+                                                return;
+                                            }
 
-                                            const formData = new FormData();
-                                            if (txnId) formData.append('transactionId', txnId);
-                                            formData.append('screenshot', screenshot);
-
-                                            await axios.put(`${API_URL}/api/users/transaction`, formData, {
-                                                headers: {
-                                                    'x-auth-token': token,
-                                                    'Content-Type': 'multipart/form-data'
+                                            await axios.put(`${API_URL}/api/users/transaction`, 
+                                                { transactionId: txnId },
+                                                {
+                                                    headers: {
+                                                        'x-auth-token': token,
+                                                        'Content-Type': 'application/json'
+                                                    }
                                                 }
-                                            });
-                                            alert("Submitted! We will verify and upgrade you shortly.");
+                                            );
+                                            addToast('Payment submitted! We will verify and activate your premium shortly.', 'success');
                                             setShowModal(false);
+                                            document.getElementById('txnId').value = '';
                                         } catch (err) {
-                                            alert("Failed to submit. Please contact support.");
+                                            addToast(err.response?.data?.msg || 'Failed to submit. Please contact support.', 'error');
                                         } finally {
                                             setLoading(false);
                                         }

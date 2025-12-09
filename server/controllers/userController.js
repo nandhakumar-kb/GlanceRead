@@ -71,7 +71,7 @@ exports.updateProgress = async (req, res) => {
     }
 };
 
-// @desc    Submit Transaction ID & Screenshot
+// @desc    Submit Transaction ID
 // @route   PUT /api/users/transaction
 // @access  Private
 exports.submitTransaction = async (req, res) => {
@@ -80,22 +80,10 @@ exports.submitTransaction = async (req, res) => {
         const user = await User.findById(req.user.id);
 
         if (!user) return res.status(404).json({ msg: 'User not found' });
+        if (!transactionId) return res.status(400).json({ msg: 'Transaction ID is required' });
 
-        if (transactionId) user.transactionId = transactionId;
-
-        // Handle Screenshot Upload
-        if (req.file) {
-            const result = await imagekit.upload({
-                file: req.file.buffer, // multer stores file in buffer
-                fileName: `txn_${user.id}_${Date.now()}`,
-                folder: '/payment_screenshots'
-            });
-            user.paymentScreenshot = result.url;
-        }
-
+        user.transactionId = transactionId;
         user.paymentStatus = 'pending';
-        // Auto-activate logic (optional) or keep pending for admin
-        // For now, keep as pending.
 
         await user.save();
 
