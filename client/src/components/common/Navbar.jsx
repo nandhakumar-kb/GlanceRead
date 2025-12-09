@@ -163,6 +163,9 @@ const Navbar = () => {
                                         <Link to="/admin/users">
                                             <Button variant="ghost" size="sm">Users</Button>
                                         </Link>
+                                        <Link to="/admin/analytics">
+                                            <Button variant="ghost" size="sm">Analytics</Button>
+                                        </Link>
                                     </>
                                 )}
                                 <Button variant="outline" size="sm" onClick={logout}>
@@ -235,9 +238,17 @@ const Navbar = () => {
                                             Signed in as {user.username}
                                         </div>
                                         {user.role === 'admin' && (
-                                            <Link to="/admin/upload" onClick={() => setIsMobileMenuOpen(false)}>
-                                                <Button variant="ghost" className="w-full justify-start">Admin Upload</Button>
-                                            </Link>
+                                            <>
+                                                <Link to="/admin/upload" onClick={() => setIsMobileMenuOpen(false)}>
+                                                    <Button variant="ghost" className="w-full justify-start">Admin Upload</Button>
+                                                </Link>
+                                                <Link to="/admin/users" onClick={() => setIsMobileMenuOpen(false)}>
+                                                    <Button variant="ghost" className="w-full justify-start">Manage Users</Button>
+                                                </Link>
+                                                <Link to="/admin/analytics" onClick={() => setIsMobileMenuOpen(false)}>
+                                                    <Button variant="ghost" className="w-full justify-start">Affiliate Analytics</Button>
+                                                </Link>
+                                            </>
                                         )}
                                         <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                                             <Button variant="primary" className="w-full">Dashboard</Button>

@@ -30,6 +30,10 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    affiliateClicks: {
+        type: Number,
+        default: 0,
+    },
     isPremium: {
         type: Boolean,
         default: true,

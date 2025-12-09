@@ -70,6 +70,28 @@ const Dashboard = () => {
                     ))}
                 </div>
 
+                {/* Badges Section */}
+                <div className="mb-12">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Your Achievements</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {user?.badges?.length > 0 ? (
+                            user.badges.map((badge, index) => (
+                                <div key={index} className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-4 shadow-sm">
+                                    <span className="text-3xl">{badge.icon}</span>
+                                    <div>
+                                        <p className="font-bold text-slate-900 dark:text-white">{badge.name}</p>
+                                        <p className="text-xs text-slate-500">Earned {new Date(badge.date).toLocaleDateString()}</p>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-span-4 text-center py-8 text-slate-500 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                                <p>No badges yet. Read your first book to unlock one!</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
                 {/* Account Status & Referral Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Account Status */}

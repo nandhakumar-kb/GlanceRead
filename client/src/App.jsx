@@ -2,11 +2,13 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+import BottomNav from './components/common/BottomNav';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminUpload from './pages/AdminUpload';
 import AdminUsers from './pages/AdminUsers';
+import AdminAnalytics from './pages/AdminAnalytics';
 import ReadBook from './pages/ReadBook';
 import Pricing from './pages/Pricing';
 import Dashboard from './pages/Dashboard';
@@ -35,6 +37,7 @@ const App = () => {
                         <Route element={<ProtectedRoute adminOnly={true} />}>
                             <Route path="/admin/upload" element={<AdminUpload />} />
                             <Route path="/admin/users" element={<AdminUsers />} />
+                            <Route path="/admin/analytics" element={<AdminAnalytics />} />
                         </Route>
 
                         <Route element={<ProtectedRoute />}>
@@ -46,6 +49,7 @@ const App = () => {
                     </Routes>
                 </main>
                 {!isReader && <Footer />}
+                {!isReader && <BottomNav />}
             </div>
         </ToastProvider>
     );

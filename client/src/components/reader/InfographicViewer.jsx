@@ -1,19 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const InfographicViewer = ({ imageSrc, images = [], title, isLocked }) => {
+const InfographicViewer = ({ imageSrc, images = [], title, isLocked, onPageChange }) => {
     // Combine to ensure we have an array to loop over. Priority: images array > single imageSrc > empty
     const allImages = (images && images.length > 0) ? images : (imageSrc ? [imageSrc] : []);
 
     const [scale, setScale] = useState(1);
+    const [currentVisiblePage, setCurrentVisiblePage] = useState(0);
+
+    // Track scroll position to determine current page
+    useEffect(() => {
+        const handleScroll = (e) => {
+            const scrollTop = e.target.scrollTop;
+            const pageHeight = e.target.scrollHeight / allImages.length;
+            const page = Math.floor(scrollTop / pageHeight);
+            setCurrentVisiblePage(page);
+            if (onPageChange) {
+                onPageChange(page);
+            }
+        };
+
+        const container = document.getElementById('infographic-container');
+        if (container) {
+            container.addEventListener('scroll', handleScroll);
+            return () => container.removeEventListener('scroll', handleScroll);
+        }
+    }, [allImages.length, onPageChange]);
 
     const handleZoomIn = () => setScale(prev => Math.min(prev + 0.25, 3));
     const handleZoomOut = () => setScale(prev => Math.max(prev - 0.25, 0.5));
     const handleReset = () => setScale(1);
 
     return (
-        <div className="relative w-full h-[calc(100vh-64px)] bg-slate-900 overflow-y-auto flex flex-col items-center">
+        <div id="infographic-container" className="relative w-full h-[calc(100vh-64px)] bg-slate-900 overflow-y-auto flex flex-col items-center">
             {/* Controls Overlay */}
             <div className="fixed bottom-8 right-8 z-50 flex gap-2 bg-slate-800/80 backdrop-blur p-2 rounded-xl border border-slate-700 shadow-2xl">
                 <button

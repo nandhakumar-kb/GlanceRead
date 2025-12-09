@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Lock, ArrowLeft, ShoppingBag, Download } from 'lucide-react';
+import { Lock, ArrowLeft, ShoppingBag, Download, Star, TrendingUp, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 import InfographicViewer from '../components/reader/InfographicViewer';
@@ -13,6 +13,8 @@ const ReadBook = () => {
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [currentPage, setCurrentPage] = useState(0);
+    const [showAffiliateCTA, setShowAffiliateCTA] = useState(false);
     const startTimeRef = React.useRef(Date.now());
 
     useEffect(() => {
@@ -28,6 +30,29 @@ const ReadBook = () => {
         };
         fetchBook();
     }, [id]);
+
+    // Show floating CTA after viewing 2+ pages
+    useEffect(() => {
+        if (currentPage >= 2 && book?.affiliateLink) {
+            setShowAffiliateCTA(true);
+        }
+    }, [currentPage, book]);
+
+    const handleAffiliateClick = async (source) => {
+        if (!book?.affiliateLink) return;
+        
+        // Track click for analytics
+        try {
+            await axios.post(`${API_URL}/api/books/${id}/affiliate-click`, {
+                source, // 'floating-button', 'header', 'end-book'
+                userId: user?._id
+            });
+        } catch (err) {
+            console.error('Tracking failed', err);
+        }
+        
+        window.open(book.affiliateLink, '_blank');
+    };
 
     // Track Reading Progress
     useEffect(() => {
@@ -116,16 +141,14 @@ const ReadBook = () => {
                     )}
 
                     {book.affiliateLink && (
-                        <a
-                            href={book.affiliateLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center space-x-2 text-primary-400 hover:text-primary-300 transition-colors"
+                        <button
+                            onClick={() => handleAffiliateClick('header')}
+                            className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                             title="Buy original book"
                         >
-                            <span className="hidden sm:inline text-sm font-medium">Get Book</span>
-                            <ShoppingBag size={20} />
-                        </a>
+                            <ShoppingBag size={18} />
+                            <span className="hidden sm:inline text-sm">Buy Book</span>
+                        </button>
                     )}
                 </div>
             </div>
@@ -134,7 +157,72 @@ const ReadBook = () => {
                     images={viewableImages}
                     title={book.title}
                     isLocked={isLocked}
+                    onPageChange={setCurrentPage}
                 />
+
+                {/* Floating Affiliate CTA - Shows after 2 pages */}
+                {showAffiliateCTA && book.affiliateLink && (
+                    <div className="fixed bottom-6 right-6 z-50 animate-bounce">
+                        <button
+                            onClick={() => handleAffiliateClick('floating-button')}
+                            className="bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-3 rounded-full shadow-2xl hover:shadow-orange-500/50 transition-all font-bold flex items-center space-x-2 group"
+                        >
+                            <ShoppingBag size={20} className="group-hover:scale-110 transition-transform" />
+                            <div className="text-left">
+                                <div className="text-sm">📚 Get Full Book</div>
+                                <div className="text-xs opacity-90">Limited Offer!</div>
+                            </div>
+                        </button>
+                    </div>
+                )}
+
+                {/* End-of-Book CTA - Shows when reaching last page */}
+                {currentPage >= viewableImages.length - 1 && book.affiliateLink && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-4">
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+                            <div className="text-center">
+                                <div className="text-4xl mb-4">🎉</div>
+                                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                                    You've Finished the Summary!
+                                </h3>
+                                <p className="text-slate-600 dark:text-slate-400 mb-6">
+                                    Want to dive deeper? Get the complete book and unlock all the insights.
+                                </p>
+                                
+                                <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 mb-6">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-sm font-semibold text-orange-700 dark:text-orange-400">Full Book Available</span>
+                                        <div className="flex items-center space-x-1 text-orange-600">
+                                            <Star size={14} fill="currentColor" />
+                                            <span className="text-xs font-bold">4.5/5</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs text-orange-600 dark:text-orange-400">2,341+ readers purchased</span>
+                                        <TrendingUp size={14} className="text-orange-600" />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    <button
+                                        onClick={() => handleAffiliateClick('end-book-popup')}
+                                        className="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:shadow-lg transition-all flex items-center justify-center space-x-2"
+                                    >
+                                        <ShoppingBag size={20} />
+                                        <span>Get Full Book Now</span>
+                                        <ExternalLink size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentPage(0)}
+                                        className="w-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-6 py-2 rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-all"
+                                    >
+                                        Read Again
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

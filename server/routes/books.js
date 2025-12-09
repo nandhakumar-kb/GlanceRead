@@ -50,4 +50,19 @@ router.put('/:id', auth, async (req, res, next) => {
     next();
 }, bookController.updateBook);
 
+// @route   POST api/books/:id/affiliate-click
+// @desc    Track affiliate link click
+// @access  Public
+router.post('/:id/affiliate-click', bookController.trackAffiliateClick);
+
+// @route   GET api/books/:id/affiliate-analytics
+// @desc    Get affiliate analytics for a book
+// @access  Private (Admin only)
+router.get('/:id/affiliate-analytics', auth, async (req, res, next) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Access denied. Admin only.' });
+    }
+    next();
+}, bookController.getAffiliateAnalytics);
+
 module.exports = router;

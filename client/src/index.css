@@ -95,4 +95,17 @@
         -webkit-text-fill-color: white !important;
         transition: background-color 5000s ease-in-out 0s;
     }
+
+    /* UI Improvements Utilities */
+    .glass {
+        @apply bg-white/10 backdrop-blur-xl border border-white/20;
+    }
+
+    .text-gradient {
+        @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600;
+    }
+
+    .glow {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
 }

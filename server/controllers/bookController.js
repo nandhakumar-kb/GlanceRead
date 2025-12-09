@@ -1,4 +1,5 @@
 const Book = require('../models/Book');
+const AffiliateClick = require('../models/AffiliateClick');
 const imagekit = require('../config/imagekit');
 
 exports.getAllBooks = async (req, res) => {
@@ -156,3 +157,92 @@ exports.updateBook = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+// Track affiliate clicks
+exports.trackAffiliateClick = async (req, res) => {
+    try {
+        const { source, userId } = req.body;
+        const bookId = req.params.id;
+
+        // Validate book exists
+        const book = await Book.findById(bookId);
+        if (!book) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        // Create click record
+        const affiliateClick = new AffiliateClick({
+            bookId,
+            userId: userId || null,
+            source: source || 'other',
+            userAgent: req.headers['user-agent'],
+            referrer: req.headers['referer'] || req.headers['referrer']
+        });
+
+        await affiliateClick.save();
+
+        // Update book with click count (optional - add field to Book model)
+        await Book.findByIdAndUpdate(bookId, {
+            $inc: { affiliateClicks: 1 }
+        });
+
+        res.json({ success: true, message: 'Click tracked' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ success: false, message: 'Tracking failed' });
+    }
+};
+
+// Get affiliate analytics for a book
+exports.getAffiliateAnalytics = async (req, res) => {
+    try {
+        const bookId = req.params.id;
+
+        // Total clicks
+        const totalClicks = await AffiliateClick.countDocuments({ bookId });
+
+        // Clicks by source
+        const clicksBySource = await AffiliateClick.aggregate([
+            { $match: { bookId: require('mongoose').Types.ObjectId(bookId) } },
+            { $group: { _id: '$source', count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]);
+
+        // Clicks over time (last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const clicksOverTime = await AffiliateClick.aggregate([
+            {
+                $match: {
+                    bookId: require('mongoose').Types.ObjectId(bookId),
+                    timestamp: { $gte: thirtyDaysAgo }
+                }
+            },
+            {
+                $group: {
+                    _id: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp' } },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+
+        // Unique users who clicked
+        const uniqueUsers = await AffiliateClick.distinct('userId', {
+            bookId,
+            userId: { $ne: null }
+        });
+
+        res.json({
+            totalClicks,
+            clicksBySource,
+            clicksOverTime,
+            uniqueUsersCount: uniqueUsers.length
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Failed to fetch analytics' });
+    }
+};
+

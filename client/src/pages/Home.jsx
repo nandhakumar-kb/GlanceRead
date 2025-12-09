@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { Search, Check, Star } from 'lucide-react';
 import BookCard from '../components/cards/BookCard';
 import useBookSearch from '../hooks/useBookSearch';
 import Button from '../components/common/Button';
@@ -52,20 +52,35 @@ const Home = () => {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.2 }}
-                            className="inline-block mb-4 px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-300 font-medium text-sm border border-primary-100 dark:border-primary-800"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/20 rounded-full text-green-600 dark:text-green-400 text-sm font-semibold mb-6 border border-green-100 dark:border-green-800 backdrop-blur-sm"
                         >
-                            ✨ Reimagine your reading list
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            12,341 books read this month
                         </motion.div>
 
-                        <h1 className="text-5xl md:text-7xl font-extrabold text-text-main mb-6 tracking-tight leading-1.1">
-                            Learn a book in <br className="hidden md:block" />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-500 animate-gradient-x">
-                                5 minutes
-                            </span>.
+                        <h1 className="text-6xl md:text-8xl font-extrabold text-text-main mb-6 tracking-tight leading-none">
+                            Master Business <br /> Books in
+                            <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-gradient-x">
+                                5 Minutes
+                            </span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-text-muted mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        <p className="text-xl md:text-2xl text-text-muted mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                             Unlock key insights from the world's best non-fiction through beautiful, high-resolution infographics.
                         </p>
+
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-4 md:gap-8 text-sm font-medium text-slate-600 dark:text-slate-400 mb-10">
+                            <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+                                <Check className="w-5 h-5 text-green-500" />
+                                <span>1000+ Summaries</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+                                <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                                <span>4.9/5 Rating</span>
+                            </div>
+                        </div>
 
                         <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-12">
                             <div className="max-w-md w-full relative group">

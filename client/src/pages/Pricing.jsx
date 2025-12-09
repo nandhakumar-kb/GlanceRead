@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check, Star, Shield } from 'lucide-react';
+import { X, Check, Star, Shield, Flame } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import gpayQr from '../assets/Gpay.jpg';
 import { API_URL } from '../config';
@@ -123,6 +123,41 @@ const Pricing = () => {
                     ))}
                 </div>
 
+                {/* Comparison Table */}
+                <div className="max-w-4xl mx-auto mt-20 mb-20 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl">
+                    <table className="w-full text-left">
+                        <thead className="bg-slate-50 dark:bg-slate-900/50">
+                            <tr>
+                                <th className="p-4 text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Feature</th>
+                                <th className="p-4 text-sm font-bold text-slate-900 dark:text-white">Free</th>
+                                <th className="p-4 text-sm font-bold text-primary-600 dark:text-primary-400">Premium</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800 bg-white dark:bg-slate-900">
+                            <tr>
+                                <td className="p-4 text-slate-700 dark:text-slate-300 font-medium">Book Access</td>
+                                <td className="p-4 text-slate-500">5 Books / Month</td>
+                                <td className="p-4 text-green-600 font-bold flex items-center gap-2"><Check className="w-4 h-4" /> Unlimited</td>
+                            </tr>
+                            <tr>
+                                <td className="p-4 text-slate-700 dark:text-slate-300 font-medium">Premium Books</td>
+                                <td className="p-4 text-slate-500">3-Page Preview</td>
+                                <td className="p-4 text-green-600 font-bold flex items-center gap-2"><Check className="w-4 h-4" /> Full Access</td>
+                            </tr>
+                            <tr>
+                                <td className="p-4 text-slate-700 dark:text-slate-300 font-medium">Downloads</td>
+                                <td className="p-4 text-slate-500"><X className="w-4 h-4 text-red-400" /></td>
+                                <td className="p-4 text-green-600 font-bold flex items-center gap-2"><Check className="w-4 h-4" /> High-Res PDF</td>
+                            </tr>
+                            <tr>
+                                <td className="p-4 text-slate-700 dark:text-slate-300 font-medium">Audio Summaries</td>
+                                <td className="p-4 text-slate-500"><X className="w-4 h-4 text-red-400" /></td>
+                                <td className="p-4 text-green-600 font-bold flex items-center gap-2"><Check className="w-4 h-4" /> Coming Soon</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 {/* Social Proof */}
                 <div className="mt-20 pt-10 border-t border-slate-200 dark:border-slate-800">
                     <p className="text-text-muted uppercase tracking-wider text-sm font-semibold mb-6">Trusted by Many Readers</p>
@@ -202,7 +237,7 @@ const Pricing = () => {
                                                 return;
                                             }
 
-                                            await axios.put(`${API_URL}/api/users/transaction`, 
+                                            await axios.put(`${API_URL}/api/users/transaction`,
                                                 { transactionId: txnId },
                                                 {
                                                     headers: {
