@@ -14,8 +14,9 @@ const adminCheck = (req, res, next) => {
 // Routes
 router.get('/', auth, adminCheck, userController.getAllUsers);
 router.put('/:id/subscription', auth, adminCheck, userController.updateSubscription);
+const upload = require('../middleware/upload');
 router.put('/progress', auth, userController.updateProgress);
-router.put('/transaction', auth, userController.submitTransaction);
+router.put('/transaction', auth, upload.single('screenshot'), userController.submitTransaction);
 router.put('/profile', auth, userController.updateUser);
 router.delete('/:id', auth, adminCheck, userController.deleteUser);
 

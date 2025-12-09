@@ -34,6 +34,10 @@ const bookSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    isFree: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Book', bookSchema);

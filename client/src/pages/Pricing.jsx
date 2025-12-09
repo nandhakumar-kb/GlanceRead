@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check, Star, Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import gpayQr from '../assets/Gpay.jpg';
 import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import axios from 'axios';
 
 const Pricing = () => {
     const { isAuthenticated } = useAuth();
+    const { addToast } = useToast();
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState(null);
     const [showExitPopup, setShowExitPopup] = useState(false);
@@ -14,8 +19,9 @@ const Pricing = () => {
 
     const handlePaymentClick = (plan) => {
         if (!isAuthenticated) {
-            alert("Please login to subscribe!");
-            return window.location.href = '/login';
+            addToast('Please login to subscribe', 'info');
+            navigate('/login');
+            return;
         }
         setSelectedPlan(plan);
         setShowModal(true);
@@ -161,9 +167,9 @@ const Pricing = () => {
                             <div className="text-left bg-primary-50 dark:bg-primary-900/20 p-4 rounded-lg border border-primary-100 dark:border-primary-800 mb-6">
                                 <p className="text-sm font-medium text-primary-800 dark:text-primary-200 mb-2">Instructions:</p>
                                 <ol className="list-decimal list-inside text-sm text-primary-700 dark:text-primary-300 space-y-1">
-                                    <li>Scan QR with GPay / Paytm / PhonePe</li>
+                                    <li>Scan QR with GPay / Paytm</li>
                                     <li>Pay <strong>₹{selectedPlan.amount}.00</strong></li>
-                                    <li>Enter your Transaction ID below</li>
+                                    <li>Take a screenshot of the payment</li>
                                 </ol>
                             </div>
 
@@ -171,36 +177,54 @@ const Pricing = () => {
                             <div className="space-y-4">
                                 <input
                                     type="text"
-                                    placeholder="Enter Transaction ID / Reference No"
+                                    placeholder="Enter Transaction ID (Optional)"
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                                     id="txnId"
                                 />
+                                <div className="space-y-2">
+                                    <label className="text-sm text-text-muted">Upload Payment Screenshot *</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        id="screenshot"
+                                        className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                                    />
+                                </div>
+
                                 <button
                                     onClick={async () => {
                                         const txnId = document.getElementById('txnId').value;
-                                        if (!txnId) return alert("Please enter a Transaction ID");
+                                        const screenshot = document.getElementById('screenshot').files[0];
 
+                                        if (!screenshot) return alert("Please upload a screenshot");
+
+                                        setLoading(true);
                                         try {
                                             const token = localStorage.getItem('token');
                                             if (!token) return alert("Please login first");
 
-                                            await fetch(`${API_URL}/api/users/transaction`, {
-                                                method: 'PUT',
+                                            const formData = new FormData();
+                                            if (txnId) formData.append('transactionId', txnId);
+                                            formData.append('screenshot', screenshot);
+
+                                            await axios.put(`${API_URL}/api/users/transaction`, formData, {
                                                 headers: {
-                                                    'Content-Type': 'application/json',
-                                                    'x-auth-token': token
-                                                },
-                                                body: JSON.stringify({ transactionId: txnId })
+                                                    'x-auth-token': token,
+                                                    'Content-Type': 'multipart/form-data'
+                                                }
                                             });
                                             alert("Submitted! We will verify and upgrade you shortly.");
                                             setShowModal(false);
                                         } catch (err) {
                                             alert("Failed to submit. Please contact support.");
+                                        } finally {
+                                            setLoading(false);
                                         }
                                     }}
-                                    className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-colors"
+                                    disabled={loading}
+                                    className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-xl font-bold transition-colors flex justify-center items-center"
                                 >
-                                    Submit for Verification
+                                    {loading ? 'Uploading...' : 'Submit Verification'}
                                 </button>
                             </div>
                         </motion.div>

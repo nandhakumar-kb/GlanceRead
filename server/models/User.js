@@ -77,6 +77,20 @@ const userSchema = new mongoose.Schema({
     isTrialUsed: {
         type: Boolean,
         default: false
+    },
+    // Payment Verification
+    transactionId: {
+        type: String,
+        default: null
+    },
+    paymentScreenshot: {
+        type: String,
+        default: null
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'verified', 'rejected', 'none'],
+        default: 'none'
     }
 }, { timestamps: true });
 

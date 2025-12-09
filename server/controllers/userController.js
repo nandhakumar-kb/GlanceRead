@@ -1,5 +1,10 @@
 const User = require('../models/User');
-
+const ImageKit = require('imagekit');
+const imagekit = new ImageKit({
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+});
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Admin
@@ -66,7 +71,7 @@ exports.updateProgress = async (req, res) => {
     }
 };
 
-// @desc    Submit Transaction ID
+// @desc    Submit Transaction ID & Screenshot
 // @route   PUT /api/users/transaction
 // @access  Private
 exports.submitTransaction = async (req, res) => {
@@ -76,8 +81,22 @@ exports.submitTransaction = async (req, res) => {
 
         if (!user) return res.status(404).json({ msg: 'User not found' });
 
-        user.transactionId = transactionId;
-        // Optionally auto-set to pending if adding status logic later
+        if (transactionId) user.transactionId = transactionId;
+
+        // Handle Screenshot Upload
+        if (req.file) {
+            const result = await imagekit.upload({
+                file: req.file.buffer, // multer stores file in buffer
+                fileName: `txn_${user.id}_${Date.now()}`,
+                folder: '/payment_screenshots'
+            });
+            user.paymentScreenshot = result.url;
+        }
+
+        user.paymentStatus = 'pending';
+        // Auto-activate logic (optional) or keep pending for admin
+        // For now, keep as pending.
+
         await user.save();
 
         res.json(user);

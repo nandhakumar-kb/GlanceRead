@@ -63,7 +63,7 @@ const ReadBook = () => {
     if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
     if (!book) return <div className="min-h-screen flex items-center justify-center">Book not found</div>;
 
-    const isLocked = book.isPremium && (!isAuthenticated || user?.subscriptionStatus !== 'active');
+    const isLocked = book.isPremium && !book.isFree && (!isAuthenticated || user?.subscriptionStatus !== 'active');
 
     // If locked, we allow THREE pages as a teaser (was 1)
     const viewableImages = isLocked
