@@ -125,3 +125,34 @@ exports.deleteBook = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.updateBook = async (req, res) => {
+    try {
+        const { title, author, category, affiliateLink, isPremium } = req.body;
+
+        // Build update object
+        const bookFields = {};
+        if (title) bookFields.title = title;
+        if (author) bookFields.author = author;
+        if (category) bookFields.category = category;
+        if (affiliateLink !== undefined) bookFields.affiliateLink = affiliateLink;
+        if (isPremium !== undefined) bookFields.isPremium = isPremium;
+
+        let book = await Book.findById(req.params.id);
+
+        if (!book) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        book = await Book.findByIdAndUpdate(
+            req.params.id,
+            { $set: bookFields },
+            { new: true }
+        );
+
+        res.json(book);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};

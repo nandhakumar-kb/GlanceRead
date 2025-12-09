@@ -217,14 +217,43 @@ const AdminUpload = () => {
                                         <span className={`text-xs px-2 py-0.5 rounded-full ${book.isPremium ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'}`}>
                                             {book.isPremium ? 'Premium' : 'Free'}
                                         </span>
+                                        {book.affiliateLink && (
+                                            <a href={book.affiliateLink} target="_blank" rel="noopener noreferrer" className="ml-2 text-xs text-blue-500 hover:underline truncate max-w-[150px] inline-block align-bottom">
+                                                Link Configured
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => handleDelete(book._id)}
-                                    className="text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
-                                >
-                                    Delete
-                                </button>
+                                <div className="flex items-center space-x-2">
+                                    <button
+                                        onClick={async () => {
+                                            const newLink = prompt("Enter new Affiliate Link:", book.affiliateLink || "");
+                                            if (newLink !== null) {
+                                                try {
+                                                    const res = await axios.put(`${API_URL}/api/books/${book._id}`,
+                                                        { affiliateLink: newLink },
+                                                        { headers: { 'x-auth-token': localStorage.getItem('token') } }
+                                                    );
+                                                    // Update local state
+                                                    setBooks(books.map(b => b._id === book._id ? { ...b, affiliateLink: newLink } : b));
+                                                    alert("Link Updated!");
+                                                } catch (err) {
+                                                    console.error(err);
+                                                    alert("Failed to update link");
+                                                }
+                                            }
+                                        }}
+                                        className="text-primary-600 hover:text-primary-800 text-sm font-medium px-3 py-1 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors"
+                                    >
+                                        Edit Link
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(book._id)}
+                                        className="text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>

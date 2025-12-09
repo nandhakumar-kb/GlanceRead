@@ -40,4 +40,14 @@ router.delete('/:id', auth, async (req, res, next) => {
     next();
 }, bookController.deleteBook);
 
+// @route   PUT api/books/:id
+// @desc    Update a book
+// @access  Private (Admin only)
+router.put('/:id', auth, async (req, res, next) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Access denied. Admin only.' });
+    }
+    next();
+}, bookController.updateBook);
+
 module.exports = router;
