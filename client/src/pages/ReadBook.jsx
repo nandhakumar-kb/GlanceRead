@@ -65,9 +65,9 @@ const ReadBook = () => {
 
     const isLocked = book.isPremium && (!isAuthenticated || user?.subscriptionStatus !== 'active');
 
-    // If locked, we allow one page as a teaser
+    // If locked, we allow THREE pages as a teaser (was 1)
     const viewableImages = isLocked
-        ? (book.infographicImages?.length ? [book.infographicImages[0]] : [book.infographicImage])
+        ? (book.infographicImages?.length ? book.infographicImages.slice(0, 3) : [book.infographicImage])
         : (book.infographicImages?.length ? book.infographicImages : [book.infographicImage]);
 
     return (

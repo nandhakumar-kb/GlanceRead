@@ -70,21 +70,47 @@ const Dashboard = () => {
                     ))}
                 </div>
 
-                {/* Account Status */}
-                <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Account Status</h2>
-                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
-                        <div>
-                            <p className="font-semibold text-slate-900 dark:text-white">Membership Plan</p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 capitalize">
-                                {user?.subscriptionStatus === 'active' ? 'Premium Member 🌟' : 'Free Plan'}
-                            </p>
+                {/* Account Status & Referral Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Account Status */}
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm h-full">
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Account Status</h2>
+                        <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                            <div>
+                                <p className="font-semibold text-slate-900 dark:text-white">Membership Plan</p>
+                                <p className="text-sm text-slate-600 dark:text-slate-400 capitalize">
+                                    {user?.subscriptionStatus === 'active' ? 'Premium Member 🌟' : 'Free Plan'}
+                                </p>
+                            </div>
+                            {user?.subscriptionStatus !== 'active' && (
+                                <button className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-500 transition-colors">
+                                    Upgrade Now
+                                </button>
+                            )}
                         </div>
-                        {user?.subscriptionStatus !== 'active' && (
-                            <button className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-500 transition-colors">
-                                Upgrade Now
+                    </div>
+
+                    {/* Referral Section (Placeholder) */}
+                    <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-8 shadow-lg text-white h-full relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-3 opacity-10">
+                            <Flame size={120} />
+                        </div>
+                        <h2 className="text-xl font-bold mb-2 relative z-10">Refer & Earn</h2>
+                        <p className="text-indigo-100 mb-6 text-sm relative z-10">
+                            Invite friends and get 1 month of Premium for free when they sign up!
+                        </p>
+
+                        <div className="bg-white/10 backdrop-blur-sm p-1 rounded-xl flex items-center border border-white/20 relative z-10">
+                            <code className="flex-1 px-3 text-sm font-mono text-indigo-100 truncate">
+                                glanceread.com/ref/{user?.username || 'user'}
+                            </code>
+                            <button
+                                onClick={() => alert('Link copied!')}
+                                className="px-3 py-1.5 bg-white text-indigo-600 rounded-lg text-xs font-bold hover:bg-indigo-50 transition-colors"
+                            >
+                                Copy
                             </button>
-                        )}
+                        </div>
                     </div>
                 </div>
             </div>

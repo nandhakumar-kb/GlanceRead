@@ -50,6 +50,34 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    subscriptionExpiry: {
+        type: Date,
+        default: null
+    },
+    planType: {
+        type: String,
+        enum: ['free', 'trial', 'monthly', 'annual', 'lifetime'],
+        default: 'free'
+    },
+    // Referral System
+    referralCode: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+    referredBy: {
+        type: String, // Store the referral code of the inviter
+        default: null
+    },
+    referralCount: {
+        type: Number,
+        default: 0
+    },
+    // Free Trial Logic
+    isTrialUsed: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

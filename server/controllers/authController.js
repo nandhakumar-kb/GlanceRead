@@ -1,10 +1,11 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 exports.register = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, referralCode } = req.body;
 
         let user = await User.findOne({ email });
         if (user) {
@@ -14,11 +15,50 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Generate unique referral code: First 3 chars of username + random hex
+        let baseCode = username.slice(0, 3).toUpperCase();
+        if (baseCode.length < 3) baseCode = "USR";
+        const newReferralCode = baseCode + crypto.randomBytes(2).toString('hex').toUpperCase();
+
+        // Free Trial Logic: 7 Days
+        const trialExpiry = new Date();
+        trialExpiry.setDate(trialExpiry.getDate() + 7);
+
         user = new User({
             username,
             email,
             password: hashedPassword,
+            referralCode: newReferralCode,
+            subscriptionStatus: 'active',
+            planType: 'trial',
+            subscriptionExpiry: trialExpiry,
+            isTrialUsed: true
         });
+
+        // Referral Logic: Reward Referrer
+        if (referralCode) {
+            const referrer = await User.findOne({ referralCode });
+            if (referrer) {
+                user.referredBy = referralCode;
+                referrer.referralCount = (referrer.referralCount || 0) + 1;
+
+                // Reward: Add 30 days to referrer's expiry
+                let currentExpiry = referrer.subscriptionExpiry && new Date(referrer.subscriptionExpiry) > new Date()
+                    ? new Date(referrer.subscriptionExpiry)
+                    : new Date();
+
+                currentExpiry.setDate(currentExpiry.getDate() + 30);
+                referrer.subscriptionExpiry = currentExpiry;
+
+                // If referrer was inactive, reactivate them
+                if (referrer.subscriptionStatus !== 'active') {
+                    referrer.subscriptionStatus = 'active';
+                    referrer.planType = 'referral_reward';
+                }
+
+                await referrer.save();
+            }
+        }
 
         await user.save();
 
@@ -35,7 +75,18 @@ exports.register = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, username: user.username, email: user.email, role: user.role, subscriptionStatus: user.subscriptionStatus } });
+                res.json({
+                    token,
+                    user: {
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role,
+                        subscriptionStatus: user.subscriptionStatus,
+                        subscriptionExpiry: user.subscriptionExpiry,
+                        referralCode: user.referralCode
+                    }
+                });
             }
         );
     } catch (err) {
@@ -71,7 +122,19 @@ exports.login = async (req, res) => {
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, username: user.username, email: user.email, role: user.role, subscriptionStatus: user.subscriptionStatus, savedBooks: user.savedBooks } });
+                res.json({
+                    token,
+                    user: {
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role,
+                        subscriptionStatus: user.subscriptionStatus,
+                        subscriptionExpiry: user.subscriptionExpiry,
+                        referralCode: user.referralCode,
+                        savedBooks: user.savedBooks
+                    }
+                });
             }
         );
     } catch (err) {
@@ -85,7 +148,6 @@ exports.saveBook = async (req, res) => {
         const user = await User.findById(req.user.id);
         const bookId = req.params.bookId;
 
-        // Ensure savedBooks array exists check
         if (!user.savedBooks) {
             user.savedBooks = [];
         }
