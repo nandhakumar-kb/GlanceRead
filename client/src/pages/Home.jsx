@@ -11,23 +11,6 @@ import SkeletonBookCard from '../components/cards/SkeletonBookCard';
 
 const Home = () => {
     const { books, loading, error, query, setQuery, category, setCategory, sort, setSort } = useBookSearch();
-    const [popularBooks, setPopularBooks] = useState([]);
-    const [popularLoading, setPopularLoading] = useState(true);
-
-    // Fetch Popular Books
-    React.useEffect(() => {
-        const fetchPopular = async () => {
-            try {
-                const res = await axios.get(`${API_URL}/api/books?sort=popular&limit=4`);
-                setPopularBooks(res.data);
-            } catch (err) {
-                console.error("Failed to fetch popular books", err);
-            } finally {
-                setPopularLoading(false);
-            }
-        };
-        fetchPopular();
-    }, []);
 
     React.useEffect(() => {
         document.title = 'Library | GlanceRead';
@@ -149,32 +132,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            {/* Most Popular Section */}
-            {!query && category === 'All' && (
-                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-                    <div className="flex items-center space-x-2 mb-8">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30">
-                            <Star className="h-5 w-5 text-orange-600 dark:text-orange-400" />
-                        </span>
-                        <h2 className="text-2xl font-bold text-text-main">Most Popular</h2>
-                    </div>
-
-                    {popularLoading ? (
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            {[...Array(4)].map((_, i) => (
-                                <SkeletonBookCard key={`pop-${i}`} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            {popularBooks.map(book => (
-                                <BookCard key={book._id} book={book} />
-                            ))}
-                        </div>
-                    )}
-                </section>
-            )}
 
             {/* Book Grid */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
