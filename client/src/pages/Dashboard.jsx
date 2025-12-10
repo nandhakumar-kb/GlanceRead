@@ -19,7 +19,7 @@ const Dashboard = () => {
                     setUser(res.data);
                 }
             } catch (err) {
-                console.error("Failed to refresh stats", err);
+                // Failed to refresh stats
             }
         };
         fetchUserData();

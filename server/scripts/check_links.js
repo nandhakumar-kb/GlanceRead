@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Book = require('./models/Book');
-require('dotenv').config();
+const Book = require('../models/Book');
+require('dotenv').config({ path: '../.env' });
 
 const checkLinks = async () => {
     try {

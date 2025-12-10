@@ -34,7 +34,7 @@ const AdminAnalytics = () => {
                     recentUsers: users.slice(0, 5)
                 });
             } catch (err) {
-                console.error("Failed to fetch analytics", err);
+                // Failed to fetch analytics
             } finally {
                 setLoading(false);
             }
