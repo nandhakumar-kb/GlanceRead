@@ -16,6 +16,7 @@ const ReadBook = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [showAffiliateCTA, setShowAffiliateCTA] = useState(false);
     const startTimeRef = useRef(Date.now());
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         const fetchBook = async () => {
@@ -57,8 +58,6 @@ const ReadBook = () => {
     // Track Reading Progress
     useEffect(() => {
         if (!book || !isAuthenticated) return;
-
-        const intervalRef = useRef(null);
 
         intervalRef.current = setInterval(async () => {
             const now = Date.now();
