@@ -58,7 +58,7 @@ const Home = () => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
-                            12,341 books read this month
+                            100 books read this month
                         </motion.div>
 
                         <h1 className="text-6xl md:text-8xl font-extrabold text-text-main mb-6 tracking-tight leading-none">
@@ -74,7 +74,7 @@ const Home = () => {
                         <div className="flex flex-wrap justify-center lg:justify-start gap-4 md:gap-8 text-sm font-medium text-slate-600 dark:text-slate-400 mb-10">
                             <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
                                 <Check className="w-5 h-5 text-green-500" />
-                                <span>1000+ Summaries</span>
+                                <span>100+ Summaries</span>
                             </div>
                             <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
                                 <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
