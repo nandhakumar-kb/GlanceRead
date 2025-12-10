@@ -43,12 +43,18 @@ const Register = () => {
     ];
 
     return (
-        <div className="min-h-screen flex bg-background transition-colors duration-300">
-            {/* Left Side - Form */}
-            <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 relative z-10">
-                <div className="mx-auto w-full max-w-sm lg:w-96">
-                    <div className="mb-10">
-                        <Link to="/" className="inline-flex items-center space-x-2 mb-8 group">
+        <div className="min-h-screen flex items-center justify-center bg-background transition-colors duration-300 relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0 z-0">
+                <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl opacity-50 animate-blob"></div>
+                <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+            </div>
+
+            {/* Form Container */}
+            <div className="w-full max-w-md p-8 relative z-10">
+                <div className="bg-surface/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-2xl">
+                    <div className="mb-10 text-center">
+                        <Link to="/" className="inline-flex items-center space-x-2 mb-8 group justify-center w-full">
                             <div className="relative">
                                 <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full blur opacity-20 group-hover:opacity-40 transition duration-200"></div>
                                 <img
@@ -62,7 +68,7 @@ const Register = () => {
                                 <span className="text-primary-500">Read</span>
                             </span>
                         </Link>
-                        <h2 className="text-4xl font-bold text-text-main mb-3">Create your account</h2>
+                        <h2 className="text-3xl font-bold text-text-main mb-3">Create your account</h2>
                         <p className="text-text-muted">
                             Join thousands of smart readers today.
                         </p>
@@ -149,26 +155,6 @@ const Register = () => {
                             </Link>
                         </p>
                     </div>
-                </div>
-            </div>
-
-            {/* Right Side - Decorative */}
-            <div className="hidden lg:block relative flex-1 bg-slate-900">
-                <div className="absolute inset-0 bg-gradient-to-bl from-primary-900 via-slate-900 to-black opacity-90"></div>
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')] bg-cover bg-center mix-blend-overlay opacity-50"></div>
-
-                <div className="relative h-full flex flex-col justify-center p-16 text-white max-w-xl mx-auto">
-                    <h3 className="text-3xl font-bold mb-8">Join the community</h3>
-                    <ul className="space-y-6">
-                        {benefits.map((benefit, index) => (
-                            <li key={index} className="flex items-center gap-4 text-lg">
-                                <div className="bg-green-500/20 p-2 rounded-full">
-                                    <Check className="w-6 h-6 text-green-400" />
-                                </div>
-                                {benefit}
-                            </li>
-                        ))}
-                    </ul>
                 </div>
             </div>
         </div>

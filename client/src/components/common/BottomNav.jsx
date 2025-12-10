@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Search, type User, BookOpen } from 'lucide-react';
+import { Home, Search, User, BookOpen } from 'lucide-react';
 
 const BottomNav = () => {
     const navItems = [
@@ -17,8 +17,8 @@ const BottomNav = () => {
                         key={item.label}
                         to={item.path}
                         className={({ isActive }) => `flex flex-col items-center gap-1 transition-colors duration-200 ${isActive
-                                ? 'text-primary-600 dark:text-primary-400'
-                                : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+                            ? 'text-primary-600 dark:text-primary-400'
+                            : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
                             }`}
                     >
                         <item.icon className="w-6 h-6" />

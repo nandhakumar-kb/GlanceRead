@@ -90,7 +90,6 @@ exports.register = async (req, res) => {
             }
         );
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server error');
     }
 };
@@ -138,7 +137,6 @@ exports.login = async (req, res) => {
             }
         );
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server error');
     }
 };
@@ -160,7 +158,6 @@ exports.saveBook = async (req, res) => {
         await user.save();
         res.json(user.savedBooks);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -174,7 +171,6 @@ exports.removeBook = async (req, res) => {
         await user.save();
         res.json(user.savedBooks);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };

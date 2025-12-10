@@ -1,7 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check, Star, Shield, Flame } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+
 import gpayQr from '../assets/Gpay.jpg';
 import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';

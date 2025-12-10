@@ -125,31 +125,20 @@ const BookCard = ({ book }) => {
                         {author}
                     </p>
 
-                    {/* Affiliate CTA - Prominent Display */}
+                    {/* Affiliate CTA - Centered & Large */}
                     {affiliateLink && (
-                        <div className="mt-3 p-3 bg-gradient-to-r from-orange-50 to-pink-50 dark:from-orange-900/20 dark:to-pink-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs font-bold text-orange-700 dark:text-orange-400 flex items-center gap-1">
-                                        📚 Full Book Available
-                                    </p>
-                                    <p className="text-[10px] text-orange-600 dark:text-orange-500 flex items-center gap-1 mt-0.5">
-                                        <Star size={10} fill="currentColor" />
-                                        4.5★ • 1,234+ reviews
-                                    </p>
-                                </div>
-                                <a
-                                    href={affiliateLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="shrink-0 bg-gradient-to-r from-orange-500 to-pink-600 text-white px-3 py-1.5 rounded-full text-xs font-bold hover:shadow-lg transition-all flex items-center gap-1"
-                                    title="Buy Book"
-                                >
-                                    <ShoppingBag size={12} />
-                                    Buy
-                                </a>
-                            </div>
+                        <div className="mt-4 flex justify-center">
+                            <a
+                                href={affiliateLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="w-full text-center bg-gradient-to-r from-orange-500 to-pink-600 hover:from-green-500 hover:to-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+                                title="Buy Book"
+                            >
+                                <ShoppingBag size={16} />
+                                Buy Now
+                            </a>
                         </div>
                     )}
                 </div>

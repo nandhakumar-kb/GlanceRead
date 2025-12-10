@@ -36,7 +36,7 @@ const AdminUpload = () => {
             const res = await axios.get(`${API_URL}/api/books`);
             setBooks(res.data);
         } catch (err) {
-            console.error("Failed to fetch books", err);
+            setError('Failed to fetch books');
         }
     };
 
@@ -81,7 +81,6 @@ const AdminUpload = () => {
             fetchBooks(); // Refresh list
             alert("Book Uploaded Successfully!");
         } catch (err) {
-            console.error('Upload error:', err);
             setError(err.response?.data?.message || 'Failed to upload book');
         } finally {
             setLoading(false);

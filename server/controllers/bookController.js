@@ -18,7 +18,6 @@ exports.getAllBooks = async (req, res) => {
         const books = await Book.find(query).sort({ createdAt: -1 });
         res.json(books);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -31,7 +30,6 @@ exports.getBookById = async (req, res) => {
         }
         res.json(book);
     } catch (err) {
-        console.error(err.message);
         if (err.kind === 'ObjectId') {
             return res.status(404).json({ message: 'Book not found' });
         }
@@ -105,7 +103,6 @@ exports.createBook = async (req, res) => {
         const book = await newBook.save();
         res.json(book);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -122,7 +119,6 @@ exports.deleteBook = async (req, res) => {
         await Book.findByIdAndDelete(req.params.id);
         res.json({ message: 'Book removed' });
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -153,7 +149,6 @@ exports.updateBook = async (req, res) => {
 
         res.json(book);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -188,7 +183,6 @@ exports.trackAffiliateClick = async (req, res) => {
 
         res.json({ success: true, message: 'Click tracked' });
     } catch (err) {
-        console.error(err.message);
         res.status(500).json({ success: false, message: 'Tracking failed' });
     }
 };
@@ -241,7 +235,6 @@ exports.getAffiliateAnalytics = async (req, res) => {
             uniqueUsersCount: uniqueUsers.length
         });
     } catch (err) {
-        console.error(err.message);
         res.status(500).json({ message: 'Failed to fetch analytics' });
     }
 };

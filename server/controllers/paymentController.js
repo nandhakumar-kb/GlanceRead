@@ -31,7 +31,6 @@ exports.createOrder = async (req, res) => {
 
         res.json(order);
     } catch (error) {
-        console.error(error);
         res.status(500).send(error);
     }
 };

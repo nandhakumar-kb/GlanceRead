@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Lock, ArrowLeft, ShoppingBag, Download, Star, TrendingUp, ExternalLink } from 'lucide-react';
@@ -15,7 +15,7 @@ const ReadBook = () => {
     const [error, setError] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
     const [showAffiliateCTA, setShowAffiliateCTA] = useState(false);
-    const startTimeRef = React.useRef(Date.now());
+    const startTimeRef = useRef(Date.now());
 
     useEffect(() => {
         const fetchBook = async () => {
@@ -44,11 +44,11 @@ const ReadBook = () => {
         // Track click for analytics
         try {
             await axios.post(`${API_URL}/api/books/${id}/affiliate-click`, {
-                source, // 'floating-button', 'header', 'end-book'
+                source,
                 userId: user?._id
             });
         } catch (err) {
-            console.error('Tracking failed', err);
+            // Tracking failed silently
         }
         
         window.open(book.affiliateLink, '_blank');
@@ -58,30 +58,33 @@ const ReadBook = () => {
     useEffect(() => {
         if (!book || !isAuthenticated) return;
 
-        const interval = setInterval(async () => {
+        const intervalRef = useRef(null);
+
+        intervalRef.current = setInterval(async () => {
             const now = Date.now();
             const timeDiff = (now - startTimeRef.current) / 1000 / 60; // in minutes
             startTimeRef.current = now; // Reset for next tick
 
             if (timeDiff > 0) {
                 try {
-                    // Simple logic: If in reader for > 1 min total (approx), mark complete
-                    // We aren't tracking total cumulative here, just session chunks.
-                    // The backend adds time. The progress % is static for now.
                     await axios.put(`${API_URL}/api/users/progress`, {
                         bookId: id,
-                        progress: 100, // Mark as read if they are here
+                        progress: 100,
                         sessionTime: timeDiff
                     }, {
                         headers: { 'x-auth-token': localStorage.getItem('token') }
                     });
                 } catch (err) {
-                    console.error("Progress sync failed", err);
+                    // Progress sync failed silently
                 }
             }
         }, 10000); // Sync every 10 seconds
 
-        return () => clearInterval(interval);
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
     }, [book, id, isAuthenticated]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
