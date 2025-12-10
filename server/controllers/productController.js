@@ -6,7 +6,6 @@ exports.getAllProducts = async (req, res) => {
         const products = await Product.find().sort({ createdAt: -1 });
         res.json(products);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -32,7 +31,6 @@ exports.createProduct = async (req, res) => {
         const product = await newProduct.save();
         res.json(product);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -61,7 +59,6 @@ exports.updateProduct = async (req, res) => {
 
         res.json(product);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -76,7 +73,6 @@ exports.deleteProduct = async (req, res) => {
 
         res.json({ msg: 'Product removed' });
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
@@ -93,7 +89,6 @@ exports.trackProductClick = async (req, res) => {
 
         res.json(product.clicks);
     } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 };
