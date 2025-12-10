@@ -4,7 +4,7 @@ const imagekit = require('../config/imagekit');
 
 exports.getAllBooks = async (req, res) => {
     try {
-        const { search, category } = req.query;
+        const { search, category, sort, limit } = req.query;
         let query = {};
 
         if (search) {
@@ -15,7 +15,24 @@ exports.getAllBooks = async (req, res) => {
             query.category = category;
         }
 
-        const books = await Book.find(query).sort({ createdAt: -1 });
+        let sortOption = { createdAt: -1 }; // Default: Newest
+        if (sort === 'popular') {
+            sortOption = { affiliateClicks: -1 };
+        } else if (sort === 'oldest') {
+            sortOption = { createdAt: 1 };
+        } else if (sort === 'a-z') {
+            sortOption = { title: 1 };
+        } else if (sort === 'z-a') {
+            sortOption = { title: -1 };
+        }
+
+        let booksQuery = Book.find(query).sort(sortOption);
+
+        if (limit) {
+            booksQuery = booksQuery.limit(parseInt(limit));
+        }
+
+        const books = await booksQuery;
         res.json(books);
     } catch (err) {
         res.status(500).send('Server Error');
@@ -134,6 +151,7 @@ exports.updateBook = async (req, res) => {
         if (category) bookFields.category = category;
         if (affiliateLink !== undefined) bookFields.affiliateLink = affiliateLink;
         if (isPremium !== undefined) bookFields.isPremium = isPremium;
+        if (req.body.infographicImages) bookFields.infographicImages = req.body.infographicImages;
 
         let book = await Book.findById(req.params.id);
 

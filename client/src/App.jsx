@@ -18,6 +18,8 @@ import Settings from './pages/Settings';
 import ScrollToTop from './components/common/ScrollToTop';
 import { ToastProvider } from './context/ToastContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Products from './pages/Products';
+import AdminProducts from './pages/AdminProducts';
 
 const App = () => {
     const location = useLocation();
@@ -32,6 +34,7 @@ const App = () => {
                     <main className="flex-grow">
                         <Routes>
                             <Route path="/" element={<Home />} />
+                            <Route path="/products" element={<Products />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/pricing" element={<Pricing />} />
@@ -42,6 +45,7 @@ const App = () => {
                                 <Route path="/admin/users" element={<AdminUsers />} />
                                 <Route path="/admin/analytics" element={<AdminAnalytics />} />
                                 <Route path="/admin/affiliate" element={<AffiliateAnalytics />} />
+                                <Route path="/admin/products" element={<AdminProducts />} />
                             </Route>
 
                             <Route element={<ProtectedRoute />}>
@@ -50,12 +54,12 @@ const App = () => {
                             </Route>
 
                             <Route path="/read/:id" element={<ReadBook />} />
-                    </Routes>
-                </main>
-                {!isReader && <Footer />}
-                {!isReader && <BottomNav />}
-            </div>
-        </ToastProvider>
+                        </Routes>
+                    </main>
+                    {!isReader && <Footer />}
+                    {!isReader && <BottomNav />}
+                </div>
+            </ToastProvider>
         </ErrorBoundary>
     );
 };

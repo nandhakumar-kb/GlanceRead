@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ArrowUp, ArrowDown, X } from 'lucide-react';
 import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
@@ -18,6 +19,11 @@ const AdminUpload = () => {
 
     // Manage Books State
     const [books, setBooks] = useState([]);
+
+    // Page Reordering State
+    const [showPagesModal, setShowPagesModal] = useState(false);
+    const [selectedBookForPages, setSelectedBookForPages] = useState(null);
+    const [orderedPages, setOrderedPages] = useState([]);
 
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -96,6 +102,48 @@ const AdminUpload = () => {
             setBooks(books.filter(b => b._id !== bookId));
         } catch (err) {
             alert("Failed to delete book");
+        }
+    };
+
+    const handleManagePages = (book) => {
+        setSelectedBookForPages(book);
+        // Ensure we have an array, even if it's mixed with single infographicImage
+        let pages = [];
+        if (book.infographicImages && book.infographicImages.length > 0) {
+            pages = [...book.infographicImages];
+        } else if (book.infographicImage) {
+            pages = [book.infographicImage];
+        }
+        setOrderedPages(pages);
+        setShowPagesModal(true);
+    };
+
+    const movePage = (index, direction) => {
+        const newPages = [...orderedPages];
+        if (direction === 'up' && index > 0) {
+            [newPages[index], newPages[index - 1]] = [newPages[index - 1], newPages[index]];
+        } else if (direction === 'down' && index < newPages.length - 1) {
+            [newPages[index], newPages[index + 1]] = [newPages[index + 1], newPages[index]];
+        }
+        setOrderedPages(newPages);
+    };
+
+    const savePageOrder = async () => {
+        if (!selectedBookForPages) return;
+        try {
+            await axios.put(`${API_URL}/api/books/${selectedBookForPages._id}`,
+                { infographicImages: orderedPages },
+                { headers: { 'x-auth-token': localStorage.getItem('token') } }
+            );
+
+            // Update local state
+            setBooks(books.map(b => b._id === selectedBookForPages._id ? { ...b, infographicImages: orderedPages } : b));
+
+            alert("Page order saved!");
+            setShowPagesModal(false);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to save order");
         }
     };
 
@@ -225,6 +273,12 @@ const AdminUpload = () => {
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <button
+                                        onClick={() => handleManagePages(book)}
+                                        className="text-slate-600 hover:text-slate-800 text-sm font-medium px-3 py-1 bg-slate-200 hover:bg-slate-300 rounded-lg transition-colors"
+                                    >
+                                        Reorder Pages
+                                    </button>
+                                    <button
                                         onClick={async () => {
                                             const newLink = prompt("Enter new Affiliate Link:", book.affiliateLink || "");
                                             if (newLink !== null) {
@@ -258,6 +312,67 @@ const AdminUpload = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Manage Pages Modal */}
+            {showPagesModal && selectedBookForPages && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                            <h3 className="font-bold text-lg text-slate-800">Reorder Pages: {selectedBookForPages.title}</h3>
+                            <button onClick={() => setShowPagesModal(false)} className="p-1 hover:bg-slate-200 rounded-full text-slate-500">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="p-4 overflow-y-auto flex-1 space-y-3">
+                            {orderedPages.length === 0 ? (
+                                <p className="text-center text-slate-500 py-8">No pages found.</p>
+                            ) : (
+                                orderedPages.map((pageUrl, index) => (
+                                    <div key={index} className="flex items-center gap-4 p-3 border border-slate-200 rounded-lg bg-white hover:border-primary-300 transition-colors">
+                                        <span className="font-mono text-slate-400 w-6">{index + 1}</span>
+                                        <img src={pageUrl} alt={`Page ${index + 1}`} className="w-16 h-28 object-cover rounded border border-slate-100 bg-slate-100" />
+                                        <div className="flex-1 truncate text-xs text-slate-400">{pageUrl.split('/').pop()}</div>
+                                        <div className="flex flex-col gap-1">
+                                            <button
+                                                onClick={() => movePage(index, 'up')}
+                                                disabled={index === 0}
+                                                className="p-1.5 hover:bg-slate-100 rounded text-slate-600 disabled:opacity-30"
+                                                title="Move Up"
+                                            >
+                                                <ArrowUp size={16} />
+                                            </button>
+                                            <button
+                                                onClick={() => movePage(index, 'down')}
+                                                disabled={index === orderedPages.length - 1}
+                                                className="p-1.5 hover:bg-slate-100 rounded text-slate-600 disabled:opacity-30"
+                                                title="Move Down"
+                                            >
+                                                <ArrowDown size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+
+                        <div className="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowPagesModal(false)}
+                                className="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200 font-medium transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={savePageOrder}
+                                className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium shadow-lg shadow-primary-500/30 transition-all"
+                            >
+                                Save Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 };

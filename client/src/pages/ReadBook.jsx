@@ -41,7 +41,7 @@ const ReadBook = () => {
 
     const handleAffiliateClick = async (source) => {
         if (!book?.affiliateLink) return;
-        
+
         // Track click for analytics
         try {
             await axios.post(`${API_URL}/api/books/${id}/affiliate-click`, {
@@ -51,7 +51,7 @@ const ReadBook = () => {
         } catch (err) {
             // Tracking failed silently
         }
-        
+
         window.open(book.affiliateLink, '_blank');
     };
 
@@ -154,7 +154,7 @@ const ReadBook = () => {
                     )}
                 </div>
             </div>
-            <div className="flex-1 relative">
+            <div className="flex-1 relative overflow-y-auto">
                 <InfographicViewer
                     images={viewableImages}
                     title={book.title}
@@ -178,49 +178,47 @@ const ReadBook = () => {
                     </div>
                 )}
 
-                {/* End-of-Book CTA - Shows when reaching last page */}
+                {/* End-of-Book Footer - Shows when reaching last page */}
                 {currentPage >= viewableImages.length - 1 && book.affiliateLink && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 flex items-center justify-center p-4">
-                        <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
-                            <div className="text-center">
-                                <div className="text-4xl mb-4">🎉</div>
-                                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                                    You've Finished the Summary!
-                                </h3>
-                                <p className="text-slate-600 dark:text-slate-400 mb-6">
-                                    Want to dive deeper? Get the complete book and unlock all the insights.
-                                </p>
-                                
-                                <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 mb-6">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-semibold text-orange-700 dark:text-orange-400">Full Book Available</span>
-                                        <div className="flex items-center space-x-1 text-orange-600">
-                                            <Star size={14} fill="currentColor" />
-                                            <span className="text-xs font-bold">4.5/5</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs text-orange-600 dark:text-orange-400">2,341+ readers purchased</span>
-                                        <TrendingUp size={14} className="text-orange-600" />
-                                    </div>
-                                </div>
+                    <div className="w-full bg-slate-100 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 p-8 pb-20">
+                        <div className="max-w-md mx-auto text-center">
+                            <div className="text-4xl mb-4">🎉</div>
+                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                                You've Finished the Summary!
+                            </h3>
+                            <p className="text-slate-600 dark:text-slate-400 mb-8">
+                                Want to dive deeper? Get the complete book and unlock all the insights.
+                            </p>
 
-                                <div className="space-y-3">
-                                    <button
-                                        onClick={() => handleAffiliateClick('end-book-popup')}
-                                        className="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:shadow-lg transition-all flex items-center justify-center space-x-2"
-                                    >
-                                        <ShoppingBag size={20} />
-                                        <span>Get Full Book Now</span>
-                                        <ExternalLink size={16} />
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentPage(0)}
-                                        className="w-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-6 py-2 rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-all"
-                                    >
-                                        Read Again
-                                    </button>
+                            <div className="bg-white dark:bg-slate-800 rounded-xl p-4 mb-8 shadow-sm border border-slate-200 dark:border-slate-700">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-sm font-semibold text-orange-700 dark:text-orange-400">Full Book Available</span>
+                                    <div className="flex items-center space-x-1 text-orange-600">
+                                        <Star size={14} fill="currentColor" />
+                                        <span className="text-xs font-bold">4.5/5</span>
+                                    </div>
                                 </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs text-orange-600 dark:text-orange-400">2,341+ readers purchased</span>
+                                    <TrendingUp size={14} className="text-orange-600" />
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <button
+                                    onClick={() => handleAffiliateClick('end-book-popup')}
+                                    className="w-full bg-gradient-to-r from-orange-500 to-pink-600 text-white px-6 py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-orange-500/20 transition-all flex items-center justify-center space-x-2 text-lg"
+                                >
+                                    <ShoppingBag size={24} />
+                                    <span>Get Full Book Now</span>
+                                    <ExternalLink size={20} />
+                                </button>
+                                <button
+                                    onClick={() => setCurrentPage(0)}
+                                    className="w-full text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 py-2 font-medium transition-all"
+                                >
+                                    Read Again
+                                </button>
                             </div>
                         </div>
                     </div>

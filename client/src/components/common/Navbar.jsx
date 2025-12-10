@@ -51,6 +51,7 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Library', path: '/' },
+        { name: 'Shop', path: '/products' },
         { name: 'Pricing', path: '/pricing' },
     ];
 
@@ -169,6 +170,9 @@ const Navbar = () => {
                                         <Link to="/admin/affiliate">
                                             <Button variant="ghost" size="sm">Affiliate</Button>
                                         </Link>
+                                        <Link to="/admin/products">
+                                            <Button variant="ghost" size="sm">Products</Button>
+                                        </Link>
                                     </>
                                 )}
                                 <Button variant="outline" size="sm" onClick={logout}>
@@ -253,6 +257,9 @@ const Navbar = () => {
                                                 </Link>
                                                 <Link to="/admin/affiliate" onClick={() => setIsMobileMenuOpen(false)}>
                                                     <Button variant="ghost" className="w-full justify-start">Affiliate Analytics</Button>
+                                                </Link>
+                                                <Link to="/admin/products" onClick={() => setIsMobileMenuOpen(false)}>
+                                                    <Button variant="ghost" className="w-full justify-start">Manage Products</Button>
                                                 </Link>
                                             </>
                                         )}
