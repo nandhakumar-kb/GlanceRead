@@ -1,56 +1,105 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
 const Book = require('../models/Book');
 
-dotenv.config({ path: '../.env' });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const books = [
     {
-        title: 'The Art of Focus',
-        author: 'Dan Koe',
-        coverImage: 'https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=600&q=80',
-        infographicImage: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200&q=80',
+        title: 'The 5 AM Club',
+        author: 'Robin Sharma',
+        coverImage: '/assets/The 5 AM Club.jpg',
+        infographicImage: '/assets/The 5 AM Club.jpg',
         category: 'Productivity',
         isPremium: true
-    },
-    {
-        title: 'Atomic Habits',
-        author: 'James Clear',
-        coverImage: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=600&q=80',
-        infographicImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1200&q=80',
-        category: 'Productivity',
-        isPremium: false
     },
     {
         title: 'The Psychology of Money',
         author: 'Morgan Housel',
-        coverImage: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&q=80',
-        infographicImage: 'https://images.unsplash.com/photo-1579621970563-ebec7560eb3e?w=1200&q=80',
-        category: 'Wealth',
+        coverImage: '/assets/The Psychology of Money.jpg',
+        infographicImage: '/assets/The Psychology of Money.jpg',
+        category: 'Finance',
+        isPremium: false
+    },
+    {
+        title: 'Zero to One',
+        author: 'Peter Thiel',
+        coverImage: '/assets/Zero to One.jpg',
+        infographicImage: '/assets/Zero to One.jpg',
+        category: 'Business',
         isPremium: true
     },
     {
-        title: 'Deep Work',
-        author: 'Cal Newport',
-        coverImage: 'https://images.unsplash.com/photo-1506784365371-1634bf5fe5e4?w=600&q=80',
-        infographicImage: 'https://images.unsplash.com/photo-1456324504439-367cee13d6a6?w=1200&q=80',
+        title: 'The Compound Effect',
+        author: 'Darren Hardy',
+        coverImage: '/assets/The Compound Effect.jpg',
+        infographicImage: '/assets/The Compound Effect.jpg',
         category: 'Productivity',
-        isPremium: true
+        isPremium: false
     },
     {
         title: 'Rich Dad Poor Dad',
         author: 'Robert Kiyosaki',
-        coverImage: 'https://images.unsplash.com/photo-1565514020176-ade3f0402b8b?w=600&q=80',
-        infographicImage: 'https://images.unsplash.com/photo-1611974765270-ca1258634369?w=1200&q=80',
-        category: 'Wealth',
+        coverImage: '/assets/Rich Dad Poor Dad.jpg',
+        infographicImage: '/assets/Rich Dad Poor Dad.jpg',
+        category: 'Finance',
+        isPremium: true
+    },
+    {
+        title: 'The Alchemist',
+        author: 'Paulo Coelho',
+        coverImage: '/assets/The Alchemist.jpg',
+        infographicImage: '/assets/The Alchemist.jpg',
+        category: 'Psychology',
         isPremium: false
     },
     {
-        title: 'Thinking, Fast and Slow',
-        author: 'Daniel Kahneman',
-        coverImage: 'https://images.unsplash.com/photo-1555449378-bd4632462e92?w=600&q=80',
-        infographicImage: 'https://images.unsplash.com/photo-1550529882-a311899a61e3?w=1200&q=80',
+        title: 'Dopamine Detox',
+        author: 'Thibaut Meurisse',
+        coverImage: '/assets/Dopamine Detox.jpg',
+        infographicImage: '/assets/Dopamine Detox.jpg',
         category: 'Psychology',
+        isPremium: true
+    },
+    {
+        title: 'Start With Why',
+        author: 'Simon Sinek',
+        coverImage: '/assets/Start With Why.jpg',
+        infographicImage: '/assets/Start With Why.jpg',
+        category: 'Business',
+        isPremium: true
+    },
+    {
+        title: 'Wings of Fire',
+        author: 'A.P.J. Abdul Kalam',
+        coverImage: '/assets/Wings of Fire.jpg',
+        infographicImage: '/assets/Wings of Fire.jpg',
+        category: 'Biography',
+        isPremium: false
+    },
+    {
+        title: 'Think and Grow Rich',
+        author: 'Napoleon Hill',
+        coverImage: '/assets/Think and Grow Rich.jpg',
+        infographicImage: '/assets/Think and Grow Rich.jpg',
+        category: 'Finance',
+        isPremium: true
+    },
+    {
+        title: 'Coffee Can Investing',
+        author: 'Saurabh Mukherjea',
+        coverImage: '/assets/Coffee Can Investing.jpg',
+        infographicImage: '/assets/Coffee Can Investing.jpg',
+        category: 'Finance',
+        isPremium: true
+    },
+    {
+        title: 'The 4-Hour Workweek',
+        author: 'Tim Ferriss',
+        coverImage: '/assets/The 4-Hour Workweek.jpg',
+        infographicImage: '/assets/The 4-Hour Workweek.jpg',
+        category: 'Productivity',
         isPremium: true
     }
 ];
